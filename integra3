@@ -1,0 +1,47 @@
+package hus.oop.integration;
+
+public abstract class MyAbstractPolynomial implements MyPolynomial {
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        int degree = degree();
+        for (int i = 0; i <= degree; i++) {
+            double coef = coefficient(i);
+            if (coef == 0) continue;
+
+            if (builder.length() > 0) {
+                builder.append(" + ");
+            }
+
+            if (i == 0) {
+                builder.append(coef);
+            } else if (i == 1) {
+                builder.append(coef).append("x");
+            } else {
+                builder.append(coef).append("x^").append(i);
+            }
+        }
+
+        if (builder.length() == 0) {
+            return "0";
+        }
+
+        return "[" + builder.toString() + "]";
+    }
+
+    @Override
+    public double[] differentiate() {
+        int degree = degree();
+        if (degree == 0) {
+            return new double[]{0};
+        }
+
+        double[] derivative = new double[degree];
+        for (int i = 1; i <= degree; i++) {
+            derivative[i - 1] = i * coefficient(i);
+        }
+
+        return derivative;
+    }
+}
