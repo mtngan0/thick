@@ -1,0 +1,134 @@
+package hus.oop.statistics;
+
+public class MyLinkedList extends MyAbstractList {
+    private MyNode top;
+
+    public MyLinkedList() {
+        top = null;
+    }
+
+    @Override
+    public int size() {
+        int count = 0;
+        MyNode current = top;
+        while (current != null) {
+            count++;
+            current = current.next;
+        }
+        return count;
+    }
+
+    @Override
+    public void add(double data) {
+        MyNode newNode = new MyNode(data, null);
+        if (top == null) {
+            top = newNode;
+        } else {
+            MyNode current = top;
+            while (current.next != null) {
+                current = current.next;
+            }
+            current.next = newNode;
+        }
+    }
+
+    @Override
+    public void insert(double data, int index) {
+        if (index < 0 || index > size()) return;
+
+        MyNode newNode = new MyNode(data, null);
+        if (index == 0) {
+            newNode.next = top;
+            top = newNode;
+        } else {
+            MyNode prev = getNodeByIndex(index - 1);
+            newNode.next = prev.next;
+            prev.next = newNode;
+        }
+    }
+
+    @Override
+    public void remove(int index) {
+        if (index < 0 || index >= size()) return;
+
+        if (index == 0) {
+            top = top.next;
+        } else {
+            MyNode prev = getNodeByIndex(index - 1);
+            prev.next = prev.next.next;
+        }
+    }
+
+    @Override
+    public MyLinkedList sortIncreasing() {
+        int n = size();
+        double[] temp = new double[n];
+        MyNode current = top;
+        for (int i = 0; i < n; i++) {
+            temp[i] = current.data;
+            current = current.next;
+        }
+
+        java.util.Arrays.sort(temp);
+        MyLinkedList sortedList = new MyLinkedList();
+        for (double v : temp) {
+            sortedList.add(v);
+        }
+        return sortedList;
+    }
+
+    @Override
+    public int binarySearch(double target) {
+        MyLinkedList sorted = sortIncreasing();
+        int left = 0, right = sorted.size() - 1;
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            double midVal = sorted.get(mid);
+            if (midVal == target) return mid;
+            if (midVal < target) left = mid + 1;
+            else right = mid - 1;
+        }
+        return -1;
+    }
+
+    @Override
+    public MyIterator iterator(int start) {
+        return new MyLinkedListIterator(start);
+    }
+
+    @Override
+    public double get(int index) {
+        return getNodeByIndex(index).data;
+    }
+
+    private MyNode getNodeByIndex(int index) {
+        MyNode current = top;
+        for (int i = 0; i < index; i++) {
+            current = current.next;
+        }
+        return current;
+    }
+
+    private class MyLinkedListIterator implements MyIterator {
+        private int currentPosition;
+
+        public MyLinkedListIterator(int position) {
+            currentPosition = position;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return currentPosition < size();
+        }
+
+        @Override
+        public Number next() {
+            return get(currentPosition++);
+        }
+
+        @Override
+        public void remove() {
+            MyLinkedList.this.remove(--currentPosition);
+        }
+    }
+}
