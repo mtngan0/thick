@@ -1,0 +1,81 @@
+package hus.oop.statistics;
+
+import java.util.Random;
+
+public class TestStatistics {
+    private Statistics statistics;
+
+    public TestStatistics(Statistics statistics) {
+        this.statistics = statistics;
+    }
+
+    public static void main(String[] args) {
+        TestStatistics test = new TestStatistics(null);
+        test.testMyArrayList();
+        test.testMyLinkedList();
+    }
+
+    public void testMyArrayList() {
+        Random random = new Random();
+        int length = 30 + random.nextInt(21); // [30, 50]
+        MyArrayList list = new MyArrayList();
+
+        for (int i = 0; i < length; i++) {
+            double value = 1 + random.nextDouble() * 19; // [1, 20)
+            list.add(value);
+        }
+
+        statistics = new Statistics(list);
+
+        System.out.println("Test MyArrayList:");
+        printStatistics(list);
+    }
+
+    public void testMyLinkedList() {
+        Random random = new Random();
+        int length = 30 + random.nextInt(21); // [30, 50]
+        MyLinkedList list = new MyLinkedList();
+
+        for (int i = 0; i < length; i++) {
+            double value = 1 + random.nextDouble() * 19; // [1, 20)
+            list.add(value);
+        }
+
+        statistics = new Statistics(list);
+
+        System.out.println("Test MyLinkedList:");
+        printStatistics(list);
+    }
+
+    private void printStatistics(MyList list) {
+        System.out.println("Dữ liệu ban đầu:");
+        for (int i = 0; i < list.size(); i++) {
+            System.out.print(String.format("%.2f ", list.get(i)));
+        }
+        System.out.println();
+
+        System.out.println("Dữ liệu đã sắp xếp:");
+        MyList sorted = list.sortIncreasing();
+        for (int i = 0; i < sorted.size(); i++) {
+            System.out.print(String.format("%.2f ", sorted.get(i)));
+        }
+        System.out.println();
+
+        System.out.println("Giá trị lớn nhất: " + String.format("%.2f", statistics.max()));
+        System.out.println("Giá trị nhỏ nhất: " + String.format("%.2f", statistics.min()));
+        System.out.println("Kỳ vọng (mean): " + String.format("%.2f", statistics.mean()));
+        System.out.println("Phương sai (variance): " + String.format("%.2f", statistics.variance()));
+
+        System.out.println("Rank các phần tử:");
+        double[] ranks = statistics.rank();
+        for (double r : ranks) {
+            System.out.print(String.format("%.2f ", r));
+        }
+        System.out.println();
+
+        double searchValue = list.get(new Random().nextInt(list.size()));
+        int index = statistics.search(searchValue);
+        System.out.println("Tìm kiếm giá trị " + String.format("%.2f", searchValue) + ": index = " + index);
+        System.out.println("---------------------------------------------------");
+    }
+}
