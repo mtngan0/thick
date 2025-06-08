@@ -1,0 +1,75 @@
+package hus.oop.statistics;
+
+public class Statistics {
+    private MyList data;
+
+    public Statistics(MyList data) {
+        this.data = data;
+    }
+
+    public double max() {
+        double max = data.get(0);
+        for (int i = 1; i < data.size(); i++) {
+            if (data.get(i) > max) {
+                max = data.get(i);
+            }
+        }
+        return max;
+    }
+
+    public double min() {
+        double min = data.get(0);
+        for (int i = 1; i < data.size(); i++) {
+            if (data.get(i) < min) {
+                min = data.get(i);
+            }
+        }
+        return min;
+    }
+
+    public double mean() {
+        double sum = 0;
+        for (int i = 0; i < data.size(); i++) {
+            sum += data.get(i);
+        }
+        return sum / data.size();
+    }
+
+    public double variance() {
+        double mean = mean();
+        double sum = 0;
+        for (int i = 0; i < data.size(); i++) {
+            double diff = data.get(i) - mean;
+            sum += diff * diff;
+        }
+        return sum / data.size();
+    }
+
+    public int search(double value) {
+        MyList sorted = data.sortIncreasing();
+        return sorted.binarySearch(value);
+    }
+
+    public double[] rank() {
+        int n = data.size();
+        double[] values = new double[n];
+        double[] ranks = new double[n];
+
+        for (int i = 0; i < n; i++) {
+            values[i] = data.get(i);
+        }
+
+        for (int i = 0; i < n; i++) {
+            int count = 1;
+            int equal = 1;
+            for (int j = 0; j < n; j++) {
+                if (j == i) continue;
+                if (values[j] < values[i]) count++;
+                else if (values[j] == values[i]) equal++;
+            }
+            ranks[i] = count + (equal - 1) / 2.0;
+        }
+
+        return ranks;
+    }
+}
