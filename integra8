@@ -1,0 +1,96 @@
+package hus.oop.integration;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Random;
+
+public class TestIntegrationCalculator {
+    private MyPolynomial polynomial;
+
+    public TestIntegrationCalculator(MyPolynomial polynomial) {
+        this.polynomial = polynomial;
+    }
+
+    public static void main(String[] args) {
+        try {
+            FileWriter writer = new FileWriter("NguyenVanA_123456_Integration.txt");
+            TestIntegrationCalculator tester = new TestIntegrationCalculator(null);
+
+            writer.write("Test Array Polynomial:\n");
+            writer.write(tester.testArrayPolynomial());
+
+            writer.write("\nTest List Polynomial:\n");
+            writer.write(tester.testListPolynomial());
+
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String testArrayPolynomial() {
+        StringBuilder sb = new StringBuilder();
+        Random rand = new Random();
+        int size = rand.nextInt(5) + 3;
+        MyArrayPolynomial p1 = new MyArrayPolynomial();
+        for (int i = 0; i < size; i++) {
+            p1.append(rand.nextDouble() * 10);
+        }
+        sb.append("Original Polynomial: ").append(p1).append("\n");
+
+        p1.set(7.5, 1);
+        sb.append("After setting coefficient at index 1 to 7.5: ").append(p1).append("\n");
+
+        MyArrayPolynomial p2 = new MyArrayPolynomial();
+        for (int i = 0; i < size; i++) {
+            p2.append(rand.nextDouble() * 10);
+        }
+        sb.append("Second Polynomial: ").append(p2).append("\n");
+
+        sb.append("Sum: ").append(p1.plus(p2)).append("\n");
+        sb.append("Difference: ").append(p1.minus(p2)).append("\n");
+        sb.append("Product: ").append(p1.multiply(p2)).append("\n");
+
+        double value = p1.evaluate(2.0);
+        sb.append("Evaluate at x = 2.0: ").append(value).append("\n");
+
+        IntegrationCalculator calc = new IntegrationCalculator(new MidpointRule(1e-6, 20), p1);
+        double integral = calc.integrate(1.0, 5.0);
+        sb.append("Definite integral from 1.0 to 5.0: ").append(integral).append("\n");
+
+        return sb.toString();
+    }
+
+    public String testListPolynomial() {
+        StringBuilder sb = new StringBuilder();
+        Random rand = new Random();
+        int size = rand.nextInt(5) + 3;
+        MyListPolynomial p1 = new MyListPolynomial();
+        for (int i = 0; i < size; i++) {
+            p1.append(rand.nextDouble() * 10);
+        }
+        sb.append("Original Polynomial: ").append(p1).append("\n");
+
+        p1.set(4.2, 2);
+        sb.append("After setting coefficient at index 2 to 4.2: ").append(p1).append("\n");
+
+        MyListPolynomial p2 = new MyListPolynomial();
+        for (int i = 0; i < size; i++) {
+            p2.append(rand.nextDouble() * 10);
+        }
+        sb.append("Second Polynomial: ").append(p2).append("\n");
+
+        sb.append("Sum: ").append(p1.plus(p2)).append("\n");
+        sb.append("Difference: ").append(p1.minus(p2)).append("\n");
+        sb.append("Product: ").append(p1.multiply(p2)).append("\n");
+
+        double value = p1.evaluate(3.0);
+        sb.append("Evaluate at x = 3.0: ").append(value).append("\n");
+
+        IntegrationCalculator calc = new IntegrationCalculator(new MidpointRule(1e-6, 20), p1);
+        double integral = calc.integrate(2.0, 6.0);
+        sb.append("Definite integral from 2.0 to 6.0: ").append(integral).append("\n");
+
+        return sb.toString();
+    }
+}
