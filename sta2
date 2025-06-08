@@ -1,0 +1,108 @@
+package hus.oop.statistics;
+
+import java.util.Arrays;
+
+public class MyArrayList extends MyAbstractList {
+    private static final int DEFAULT_CAPACITY = 16;
+    private double[] data;
+    private int size;
+
+    public MyArrayList() {
+        data = new double[DEFAULT_CAPACITY];
+        size = 0;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public void add(double data) {
+        if (size == this.data.length) {
+            allocateMore();
+        }
+        this.data[size++] = data;
+    }
+
+    @Override
+    public void insert(double data, int index) {
+        if (index < 0 || index > size) return;
+        if (size == this.data.length) {
+            allocateMore();
+        }
+        for (int i = size; i > index; i--) {
+            this.data[i] = this.data[i - 1];
+        }
+        this.data[index] = data;
+        size++;
+    }
+
+    @Override
+    public void remove(int index) {
+        if (index < 0 || index >= size) return;
+        for (int i = index; i < size - 1; i++) {
+            data[i] = data[i + 1];
+        }
+        size--;
+    }
+
+    @Override
+    public MyArrayList sortIncreasing() {
+        MyArrayList sortedList = new MyArrayList();
+        sortedList.data = Arrays.copyOf(data, size);
+        sortedList.size = size;
+        Arrays.sort(sortedList.data, 0, size);
+        return sortedList;
+    }
+
+    @Override
+    public int binarySearch(double target) {
+        int left = 0, right = size - 1;
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            if (data[mid] == target) return mid;
+            if (data[mid] < target) left = mid + 1;
+            else right = mid - 1;
+        }
+        return -1;
+    }
+
+    @Override
+    public MyIterator iterator(int start) {
+        return new MyArrayListIterator(start);
+    }
+
+    @Override
+    public double get(int index) {
+        if (index < 0 || index >= size) throw new IndexOutOfBoundsException();
+        return data[index];
+    }
+
+    private void allocateMore() {
+        data = Arrays.copyOf(data, data.length * 2);
+    }
+
+    private class MyArrayListIterator implements MyIterator {
+        private int currentPosition;
+
+        public MyArrayListIterator(int position) {
+            currentPosition = position;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return currentPosition < size;
+        }
+
+        @Override
+        public Number next() {
+            return data[currentPosition++];
+        }
+
+        @Override
+        public void remove() {
+            MyArrayList.this.remove(--currentPosition);
+        }
+    }
+}
