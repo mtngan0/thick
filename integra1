@@ -1,0 +1,28 @@
+package hus.oop.integration;
+
+public class IntegrationCalculator {
+    private MyIntegrator integrator;
+    private MyPolynomial poly;
+
+    public IntegrationCalculator(MyPolynomial poly) {
+        this.poly = poly;
+        this.integrator = new TrapezoidRule(); // mặc định dùng quy tắc hình thang
+    }
+
+    public IntegrationCalculator(MyIntegrator integrator, MyPolynomial poly) {
+        this.integrator = integrator;
+        this.poly = poly;
+    }
+
+    public void setPoly(MyPolynomial poly) {
+        this.poly = poly;
+    }
+
+    public void setIntegrator(MyIntegrator integrator) {
+        this.integrator = integrator;
+    }
+
+    public double integrate(double lower, double upper) {
+        return integrator.integrate(poly, lower, upper);
+    }
+}
